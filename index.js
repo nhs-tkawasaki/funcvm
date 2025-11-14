@@ -3,7 +3,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const fetch = require('node-fetch');
+const fetch = require('./proxy-fetch');
 const Progress = require('node-fetch-progress');
 const unzipper = require('unzipper');
 const { getLocations, getPlatform, constants } = require('./common');
