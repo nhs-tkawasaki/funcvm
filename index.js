@@ -3,27 +3,45 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const fetch = require('node-fetch');
-const Progress = require('node-fetch-progress');
+const axios = require('axios');
+const Progress = require('progress-stream');
 const unzipper = require('unzipper');
 const { getLocations, getPlatform, constants } = require('./common');
 const JSON5 = require('json5');
 const args = process.argv.slice(2);
 
+function formatEta(secondsRemaining) {
+    const seconds = Math.max(0, Math.round(secondsRemaining));
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+    }
+    return `${secs}s`;
+}
+
 async function downloadAndUnzip(url, dest) {
-    const response = await fetch(url);
-    const progress = new Progress(response, { throttle: 100 })
+    const response = await axios({
+        method: 'get',
+        url,
+        responseType: 'stream',
+    });
+    const totalBytes = Number(response.headers['content-length']) || undefined;
+    const progress = Progress({ length: totalBytes, time: 100 });
     let prevEta;
     progress.on('progress', (p) => {
-        if (prevEta !== p.etah) {
-            console.log(p.etah + ' remaining');
-            prevEta = p.etah;
+        if (!p.eta) return;
+        const eta = formatEta(p.eta);
+        if (prevEta !== eta) {
+            console.log(`${eta} remaining`);
+            prevEta = eta;
         }
     });
     await new Promise((resolve, reject) => {
+        response.data.on('error', reject);
         const unzipperInstance = unzipper.Extract({ path: dest });
         unzipperInstance.promise().then(resolve, reject);
-        response.body.pipe(unzipperInstance);
+        response.data.pipe(progress).pipe(unzipperInstance);
     });
 }
 
@@ -94,8 +112,8 @@ Examples:
         process.exit(0);
     }
 
-    const feedResponse = await fetch("https://aka.ms/AAeq1v7");
-    const feedText = await feedResponse.text();
+    const feedResponse = await axios.get("https://aka.ms/AAeq1v7", { responseType: 'text' });
+    const feedText = feedResponse.data;
     const feed = JSON5.parse(feedText);
 
     const feedTags = feed.tags;
@@ -135,13 +153,19 @@ Examples:
 
     if (!tag) {
         // check GitHub releases
-        const releaseResponse = await fetch(`https://api.github.com/repos/Azure/azure-functions-core-tools/releases/tags/${version}`);
+        const releaseResponse = await axios.get(`https://api.github.com/repos/Azure/azure-functions-core-tools/releases/tags/${version}`, {
+            headers: {
+                'User-Agent': 'funcvm',
+            },
+            responseType: 'text',
+            validateStatus: () => true,
+        });
         if (releaseResponse.status !== 200) {
             console.error(`Unable to find version ${version} on GitHub releases https://github.com/Azure/azure-functions-core-tools/releases`);
             process.exit(1);
         }
 
-        const releaseText = await releaseResponse.text();
+        const releaseText = releaseResponse.data;
         const release = JSON5.parse(releaseText);
         const name = `Azure.Functions.Cli.${platform.label}.${version}.zip`;
         const asset = release.assets.find(asset => asset.name === name);

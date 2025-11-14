@@ -13,10 +13,10 @@
   "author": "Anthony Chu <anthony@anthonychu.ca>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.7.7",
     "command-exists": "^1.2.9",
     "json5": "^2.2.0",
-    "node-fetch": "^2.6.5",
-    "node-fetch-progress": "^1.0.2",
+    "progress-stream": "^2.0.0",
     "unzipper": "^0.10.11"
   },
   "repository": {
