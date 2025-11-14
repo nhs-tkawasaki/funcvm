@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const { getProxyForUrl } = require('proxy-from-env');
-const HttpsProxyAgent = require('https-proxy-agent');
+const { HttpsProxyAgent } = require('https-proxy-agent');
 
 function fetchWithProxy(url, options = {}) {
     const proxyUrl = getProxyForUrl(url);
