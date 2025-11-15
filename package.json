@@ -1,7 +1,7 @@
 {
-  "name": "@anthonychu/funcvm",
-  "version": "0.2.1",
-  "description": "Azure Functions Core Tools Version Manager",
+  "name": "@nhs-tkawasaki/funcvm-fork",
+  "version": "0.0.0",
+  "description": "Azure Functions Core Tools Version Manager (Fork)",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
     "funcvm": "./index.js",
     "func": "./func.js"
   },
-  "author": "Anthony Chu <anthony@anthonychu.ca>",
+  "author": "nhs-tkawasaki",
   "license": "MIT",
   "dependencies": {
     "command-exists": "^1.2.9",
@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/anthonychu/funcvm.git"
+    "url": "git://github.com/nhs-tkawasaki/funcvm.git"
   },
   "private": false
 }
