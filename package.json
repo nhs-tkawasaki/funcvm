@@ -13,10 +13,12 @@
   "author": "nhs-tkawasaki",
   "license": "MIT",
   "dependencies": {
+    "https-proxy-agent": "^7.0.4",
     "command-exists": "^1.2.9",
     "json5": "^2.2.0",
     "node-fetch": "^2.6.5",
     "node-fetch-progress": "^1.0.2",
+    "proxy-from-env": "^1.1.0",
     "unzipper": "^0.10.11"
   },
   "repository": {
