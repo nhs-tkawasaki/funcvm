@@ -1,6 +1,6 @@
 {
   "name": "@nhs-tkawasaki/funcvm-fork",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Azure Functions Core Tools Version Manager (Fork)",
   "main": "index.js",
   "scripts": {
