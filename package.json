@@ -19,7 +19,7 @@
     "node-fetch": "^2.6.7",
     "node-fetch-progress": "^1.0.2",
     "proxy-from-env": "^1.1.0",
-    "unzipper": "^0.10.11"
+    "unzipper": "^0.12.1"
   },
   "repository": {
     "type": "git",
