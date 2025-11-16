@@ -16,6 +16,7 @@ async function downloadAndUnzip(url, dest) {
         method: 'get',
         url,
         responseType: 'stream',
+        proxytunnel: true
     });
     const totalBytes = Number(response.headers['content-length']) || undefined;
     const progress = Progress({ length: totalBytes, time: 100 });
@@ -104,7 +105,10 @@ Examples:
         process.exit(0);
     }
 
-    const feedResponse = await axios.get("https://aka.ms/AAeq1v7", { responseType: 'text' });
+    const feedResponse = await axios.get("https://aka.ms/AAeq1v7", { 
+        responseType: 'text',
+        proxytunnel: true
+    });
     const feedText = feedResponse.data;
     const feed = JSON5.parse(feedText);
 
@@ -148,6 +152,7 @@ Examples:
         const releaseResponse = await axios.get(`https://api.github.com/repos/Azure/azure-functions-core-tools/releases/tags/${version}`, {
             responseType: 'text',
             validateStatus: () => true,
+            proxytunnel: true
         });
         if (releaseResponse.status !== 200) {
             console.error(`Unable to find version ${version} on GitHub releases https://github.com/Azure/azure-functions-core-tools/releases`);
