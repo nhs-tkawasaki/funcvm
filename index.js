@@ -5,20 +5,11 @@ const os = require('os');
 const path = require('path');
 const axios = require('axios');
 const Progress = require('progress-stream');
+const { formatDistanceToNow } = require('date-fns');
 const unzipper = require('unzipper');
 const { getLocations, getPlatform, constants } = require('./common');
 const JSON5 = require('json5');
 const args = process.argv.slice(2);
-
-function formatEta(secondsRemaining) {
-    const seconds = Math.max(0, Math.round(secondsRemaining));
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    if (minutes > 0) {
-        return `${minutes}m ${secs}s`;
-    }
-    return `${secs}s`;
-}
 
 async function downloadAndUnzip(url, dest) {
     const response = await axios({
@@ -31,7 +22,8 @@ async function downloadAndUnzip(url, dest) {
     let prevEta;
     progress.on('progress', (p) => {
         if (!p.eta) return;
-        const eta = formatEta(p.eta);
+        const etaDate = new Date(Date.now() + p.eta * 1000);
+        const eta = formatDistanceToNow(etaDate, { includeSeconds: true });
         if (prevEta !== eta) {
             console.log(`${eta} remaining`);
             prevEta = eta;
