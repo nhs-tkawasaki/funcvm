@@ -146,9 +146,6 @@ Examples:
     if (!tag) {
         // check GitHub releases
         const releaseResponse = await axios.get(`https://api.github.com/repos/Azure/azure-functions-core-tools/releases/tags/${version}`, {
-            headers: {
-                'User-Agent': 'funcvm',
-            },
             responseType: 'text',
             validateStatus: () => true,
         });
